@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Overlay layers */
+  --z-overlay: 400;
+
+  --z-spotlight: 1000; /* Tutorial spotlights/guided help */
+
+  /* System layers */
+  --z-critical: 2000; /* Critical system notifications */
+
+  /* spacing */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+}
+
+:root {
+  --background: #eef1f5;
+  --foreground: #101b2d;
+  --surface: #f8f9fb;
+  --surface-foreground: #101b2d;
+  --sidebar: #101b2d;
+  --sidebar-foreground: #f7f9fc;
+  --card: #ffffff;
+  --card-foreground: #101b2d;
+  --popup: #ffffff;
+  --popup-foreground: #101b2d;
+  --primary: #c61627;
+  --primary-foreground: #ffffff;
+  --secondary: #1c2b44;
+  --secondary-foreground: #ffffff;
+  --accent: #dbe3ef;
+  --accent-foreground: #101b2d;
+  --muted: #e4e8ee;
+  --muted-foreground: #5a6575;
+  --success: #0aa34f;
+  --success-foreground: #ffffff;
+  --error: #cf2033;
+  --error-foreground: #ffffff;
+  --warning: #e5a000;
+  --warning-foreground: #1d1700;
+  --info: #1769aa;
+  --info-foreground: #ffffff;
+  --info-hover: #12598f;
+  --info-active: #0d4773;
+  --border: #cbd3df;
+  --font-family-base: 'Source Sans 3', sans-serif;
+  --font-family-display: 'Barlow Condensed', sans-serif;
+  --font-family-monospace: ui-monospace, monospace;
+  --font-family-cursive: cursive;
+  --shadow: 0 1px 2px rgba(16,27,45,.09);
+  --shadow-md: 0 6px 18px rgba(16,27,45,.12);
+  --shadow-lg: 0 14px 40px rgba(16,27,45,.16);
+  --shadow-focus: 0 0 0 3px rgba(198,22,39,.24);
+  --radius-sm: 4px;
+  --radius: 7px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 999px;
+  --animation-duration-fast: 120ms;
+  --animation-duration-normal: 220ms;
+  --animation-duration-slow: 360ms;
+  --chart-color-1: #c61627;
+  --chart-color-2: #1769aa;
+  --chart-color-3: #0aa34f;
+  --chart-color-4: #e5a000;
+  --chart-color-5: #6f4ab5;
+}
+.dark {
+  --background: #09111e;
+  --foreground: #eef3fa;
+  --surface: #0f1a2a;
+  --surface-foreground: #eef3fa;
+  --sidebar: #070d17;
+  --sidebar-foreground: #f7f9fc;
+  --card: #152238;
+  --card-foreground: #eef3fa;
+  --popup: #152238;
+  --popup-foreground: #eef3fa;
+  --primary: #e13043;
+  --primary-foreground: #ffffff;
+  --secondary: #dbe3ef;
+  --secondary-foreground: #101b2d;
+  --accent: #233451;
+  --accent-foreground: #eef3fa;
+  --muted: #1c2a40;
+  --muted-foreground: #aeb9c9;
+  --success: #17bd63;
+  --success-foreground: #06150c;
+  --error: #ed4c5e;
+  --error-foreground: #ffffff;
+  --warning: #f3b928;
+  --warning-foreground: #1d1700;
+  --info: #4d9bd3;
+  --info-foreground: #07131f;
+  --info-hover: #65aada;
+  --info-active: #2f82bd;
+  --border: #30415c;
+  --chart-color-1: #ed4c5e;
+  --chart-color-2: #4d9bd3;
+  --chart-color-3: #17bd63;
+  --chart-color-4: #f3b928;
+  --chart-color-5: #9a78db;
+}
