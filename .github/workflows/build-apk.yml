@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir -p android/app/src/main/java/app/pitbuzz/team
 
-          cat > settings.gradle <<'EOF'
+          cat > android/settings.gradle <<'EOF'
           pluginManagement {
               repositories {
                   google()
@@ -42,7 +42,7 @@ jobs:
           include(":app")
           EOF
 
-          cat > build.gradle <<'EOF'
+          cat > android/build.gradle <<'EOF'
           plugins {
               id 'com.android.application' version '8.7.3' apply false
           }
