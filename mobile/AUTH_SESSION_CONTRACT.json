@@ -1,0 +1,11 @@
+{
+  "registration": [
+    "name",
+    "phone",
+    "confirm_phone",
+    "email",
+    "password",
+    "confirm_password"
+  ],
+  "phone_required": true
+}

@@ -1,0 +1,10 @@
+{
+  "source": "reconstructed from 2026-09-09 work",
+  "first_compile_ready": true,
+  "runtime_pending": [
+    "live API/database",
+    "Firebase config",
+    "GitHub compile",
+    "real-device test"
+  ]
+}

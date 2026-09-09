@@ -1,32 +1,14 @@
-# PitBuzz
-        
-PitBuzz is CS Designs' mobile-first race-day communications platform. This project is the NATVA Edition. It
+# Team PitBuzz self-hosted working build
 
-Made with Floot.
+Beta-critical backend now covers authentication, teams, dependent riders, family/crew,
+rider class subscriptions, member-to-rider following, Current Race / Up Next,
+private messages, audio preferences, and provider-neutral push-device storage.
 
-# Instructions
+Mobile portability:
+- push subscriptions explicitly distinguish web / Android / iOS
+- provider is not hard-coded to Floot
+- private-message audio defaults OFF
+- Team Owner/Admin cannot advance race status unless separately granted race_admin/super_admin
 
-For security reasons, the `env.json` file is not pre-populated — you will need to generate or retrieve the values yourself.  
-
-For **JWT secrets**, generate a value with:  
-
-```
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-```
-
-Then paste the generated value into the appropriate field.  
-
-For the **Floot Database**, download your database content as a pg_dump from the cog icon in the database view (right pane -> data -> floot data base -> cog icon on the left of the name), upload it to your own PostgreSQL database, and then fill in the connection string value.  
-
-**Note:** Floot OAuth will not work in self-hosted environments.  
-
-For other external services, retrieve your API keys and fill in the corresponding values.  
-
-Once everything is configured, you can build and start the service with:  
-
-```
-npm install -g pnpm
-pnpm install
-pnpm vite build
-pnpm tsx server.ts
-```
+Next working batch: announcements targeting/filtering, message read state, notification dispatch adapter,
+then Android/iOS shell configuration and end-to-end beta test checklist.

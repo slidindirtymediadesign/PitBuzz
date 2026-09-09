@@ -1,0 +1,13 @@
+PitBuzz master recovery assembled 2026-09-09
+
+Sources merged:
+- PitBuzz-main.zip (GitHub baseline)
+- TeamPitBuzz_ServerPrep_WORKING.zip (recovered PHP/schema server prep)
+- PitBuzz_Working_Recovered_2026-09-09.zip (today's Android/spec work)
+- Current-session NATVA/PitBuzz visual reference assets
+
+PHP API files recovered: 12
+Android Kotlin files recovered: 12
+schema.mysql.sql present: True
+
+Important: This is the best recoverable master from currently accessible files. Some later backend endpoints described in specs/conversation may not exist as exact source files and must not be falsely treated as recovered.

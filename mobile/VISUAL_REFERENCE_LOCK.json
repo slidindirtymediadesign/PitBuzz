@@ -1,0 +1,17 @@
+{
+  "reference": "user-supplied NATVA/PitBuzz light UI",
+  "nav": [
+    "Home",
+    "Announcements",
+    "Messages",
+    "Audio",
+    "Settings"
+  ],
+  "forbidden": [
+    "Team PitBuzz branding",
+    "yellow/black generic theme",
+    "Tracks",
+    "Drivers",
+    "More"
+  ]
+}

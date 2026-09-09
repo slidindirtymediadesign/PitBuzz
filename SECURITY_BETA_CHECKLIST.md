@@ -1,0 +1,12 @@
+# Security gate before outside beta testers
+- HTTPS only.
+- No database credentials in mobile app bundles.
+- Passwords stored only with PHP password_hash.
+- Session cookies Secure + HttpOnly + SameSite.
+- Race control server-authorized; never trust hidden client buttons.
+- Team manager operations verify team membership server-side.
+- Invite tokens stored hashed and expire.
+- Private-message API verifies authenticated sender/recipient access.
+- Push payloads for private messages should avoid exposing unnecessary message text on locked screens.
+- Rate-limit login, registration, invites, messages and announcement sends before public rollout.
+- Remove debug stack traces from production responses.
