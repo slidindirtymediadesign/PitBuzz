@@ -294,8 +294,7 @@ class MainActivity:AppCompatActivity(){
     if(a!=null && a.length()>0){
      val x=a.getJSONObject(0)
      val title=x.optString("title").ifBlank{"OFFICIAL ANNOUNCEMENT"}
-     title.uppercase()+"
-"+x.optString("body")
+     title.uppercase()+"\n"+x.optString("body")
     } else "No announcements yet."
    }else "Announcements unavailable."
   }
@@ -339,8 +338,7 @@ class MainActivity:AppCompatActivity(){
   val icons=mapOf("Home" to "⌂","Announcements" to "▣","Messages" to "✉","Audio" to "◉","Settings" to "⚙")
   listOf("Home","Announcements","Messages","Audio","Settings").forEach{name->
    val item=TextView(this).apply{
-    text=(icons[name]?:"")+"
-"+name
+    text=(icons[name]?:"")+"\n"+name
     textSize=9f
     gravity=Gravity.CENTER
     includeFontPadding=false
@@ -583,10 +581,7 @@ class MainActivity:AppCompatActivity(){
   v.addView(txt("New Announcement",20f,true))
   v.addView(txt("Announcement Type",12f,true))
   val types=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;weightSum=3f}
-  listOf("General
-All Users","Specific Class
-Selected Classes","Private Message
-Single User").forEachIndexed{i,name->
+  listOf("General\nAll Users","Specific Class\nSelected Classes","Private Message\nSingle User").forEachIndexed{i,name->
    types.addView(TextView(this).apply{
     text=name
     textSize=10f
@@ -643,18 +638,12 @@ Single User").forEachIndexed{i,name->
   v.addView(txt("QUICK ACTIONS",11f,true))
   val grid=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL}
   val actions=listOf(
-   "New
-Announcement" to {showAnnouncementComposer()},
-   "Quick
-Message" to {composeMessage()},
-   "Race
-Control" to {showRaceControl()},
-   "Announcement
-History" to {showAnnouncements()},
-   "Users & Staff
-Manage Access" to {},
-   "App Settings
-Configure App" to {showSettings()}
+   "New\nAnnouncement" to {showAnnouncementComposer()},
+   "Quick\nMessage" to {composeMessage()},
+   "Race\nControl" to {showRaceControl()},
+   "Announcement\nHistory" to {showAnnouncements()},
+   "Users & Staff\nManage Access" to {},
+   "App Settings\nConfigure App" to {showSettings()}
   )
   for(r in 0..1){
    val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;weightSum=3f}
