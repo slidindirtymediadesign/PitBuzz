@@ -29,7 +29,7 @@ class MainActivity:AppCompatActivity(){
  private fun gap(v:LinearLayout,h:Int=10){v.addView(Space(this),LinearLayout.LayoutParams(1,dp(h)))}
  private fun root(scroll:Boolean=true):LinearLayout{
   val body=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(18),dp(8),dp(18),dp(12));setBackgroundColor(Color.rgb(248,250,252))}
-  if(scroll){val sv=ScrollView(this).apply{isFillViewport=true;setBackgroundColor(Color.rgb(248,250,252))};sv.addView(body,ScrollView.LayoutParams(-1,-2));setContentView(sv)}else setContentView(body);return body
+  if(scroll){val sv=ScrollView(this).apply{isFillViewport=true;setBackgroundColor(Color.rgb(248,250,252))};sv.addView(body,android.view.ViewGroup.LayoutParams(-1,-2));setContentView(sv)}else setContentView(body);return body
  }
  private fun txt(s:String,size:Float=16f,bold:Boolean=false)=TextView(this).apply{text=s;textSize=size;setTextColor(navy);setPadding(dp(4),dp(5),dp(4),dp(5));if(bold)setTypeface(Typeface.DEFAULT,Typeface.BOLD)}
  private fun field(h:String,password:Boolean=false)=EditText(this).apply{
@@ -104,19 +104,62 @@ class MainActivity:AppCompatActivity(){
   v.addView(txt("Welcome, ${user.optString("name","Rider")}",22f,true))
   val latestCard=card();val head=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL};head.addView(txt("LATEST ANNOUNCEMENT",15f,true).apply{setTextColor(red)},LinearLayout.LayoutParams(0,-2,1f));head.addView(txt("VIEW ALL ›",11f,true).apply{setTextColor(blue);setOnClickListener{showAnnouncements()}});latestCard.addView(head)
   val latest=txt("Loading…",15f).apply{setTextColor(Color.rgb(36,45,54))};latestCard.addView(latest);v.addView(latestCard)
-  network({api.get(ApiRoutes.ANNOUNCEMENTS)}){r->latest.text=if(r.ok){val a=JSONObject(r.body).optJSONArray("announcements");if(a!=null&&a.length()>0){val x=a.getJSONObject(0);val title=x.optString("title").ifBlank{"Official Announcement"};title.uppercase()+"
-"+x.optString("body")}else"No announcements yet."}else"Announcements unavailable."}
+  network({ api.get(ApiRoutes.ANNOUNCEMENTS) }) { r ->
+   latest.text = if (r.ok) {
+    val a = JSONObject(r.body).optJSONArray("announcements")
+    if (a != null && a.length() > 0) {
+     val x = a.getJSONObject(0)
+     val title = x.optString("title").ifBlank { "Official Announcement" }
+     title.uppercase() + "\n" + x.optString("body")
+    } else {
+     "No announcements yet."
+    }
+   } else {
+    "Announcements unavailable."
+   }
+  }
   v.addView(btn("My Team",false){showTeam()})
   val role=user.optString("systemRole","user")
   if(role in listOf("announcer","admin","super_admin")){v.addView(txt("OFFICIAL TOOLS",12f,true).apply{setTextColor(muted);letterSpacing=.08f});v.addView(btn("Send Announcement"){showAnnouncementComposer()});v.addView(btn("Race Control",false){showRaceControl()})}
   if(role=="super_admin")v.addView(btn("Admin Roles",false){showAdminRoles()})
   v.addView(bottomNav("Home"));footer(v)
  }
- private fun bottomNav(active:String):LinearLayout{
-  val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL;weightSum=5f;setPadding(0,dp(8),0,0);background=rounded(Color.WHITE,14,1,Color.rgb(220,226,232))}
-  val icons=mapOf("Home" to "⌂","Announcements" to "!","Messages" to "✉","Audio" to "◉","Settings" to "⚙")
-  listOf("Home","Announcements","Messages","Audio","Settings").forEach{n->row.addView(TextView(this).apply{text=(icons[n]?:"")+"
-"+n;textSize=10f;gravity=Gravity.CENTER;setTypeface(Typeface.DEFAULT,if(n==active)Typeface.BOLD else Typeface.NORMAL);setTextColor(if(n==active)red else navy);setPadding(dp(1),dp(6),dp(1),dp(6));setOnClickListener{when(n){"Home"->resumeSession();"Announcements"->showAnnouncements();"Messages"->showMessages();"Audio"->showAudio();"Settings"->showSettings()}}},LinearLayout.LayoutParams(0,dp(58),1f))}
+ private fun bottomNav(active: String): LinearLayout {
+  val row = LinearLayout(this).apply {
+   orientation = LinearLayout.HORIZONTAL
+   weightSum = 5f
+   setPadding(0, dp(8), 0, 0)
+   background = rounded(Color.WHITE, 14, 1, Color.rgb(220, 226, 232))
+  }
+
+  val icons = mapOf(
+   "Home" to "⌂",
+   "Announcements" to "!",
+   "Messages" to "✉",
+   "Audio" to "◉",
+   "Settings" to "⚙"
+  )
+
+  listOf("Home", "Announcements", "Messages", "Audio", "Settings").forEach { name ->
+   val item = TextView(this).apply {
+    text = (icons[name] ?: "") + "\n" + name
+    textSize = 10f
+    gravity = Gravity.CENTER
+    setTypeface(Typeface.DEFAULT, if (name == active) Typeface.BOLD else Typeface.NORMAL)
+    setTextColor(if (name == active) red else navy)
+    setPadding(dp(1), dp(6), dp(1), dp(6))
+    setOnClickListener {
+     when (name) {
+      "Home" -> resumeSession()
+      "Announcements" -> showAnnouncements()
+      "Messages" -> showMessages()
+      "Audio" -> showAudio()
+      "Settings" -> showSettings()
+     }
+    }
+   }
+   row.addView(item, LinearLayout.LayoutParams(0, dp(58), 1f))
+  }
   return row
  }
  private fun showAnnouncements(){
