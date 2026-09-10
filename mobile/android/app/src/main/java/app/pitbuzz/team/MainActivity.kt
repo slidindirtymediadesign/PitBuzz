@@ -392,7 +392,49 @@ class MainActivity:AppCompatActivity(){
    val j=JSONObject().put("login",loginValue).put("code",code.text.toString()).put("password",pw.text.toString());network({api.post(ApiRoutes.RESET_CONFIRM,j.toString())}){r->if(r.ok){toast("Password updated");showLogin()}else toast(jsonError(r.body,"Password reset failed"))}
   });v.addView(btn("Cancel",false){showLogin()});footer(v)
  }
- private fun resumeSession(){network({api.get(ApiRoutes.SESSION)}){r->if(r.ok){syncPushToken();showHome(JSONObject(r.body).getJSONObject("user"))}else{api.token=null;showLogin()}}}
+ private fun resumeSession(open:String?=null){
+  network({api.get(ApiRoutes.SESSION)}){r->
+   if(r.ok){
+    syncPushToken()
+    val user=JSONObject(r.body).getJSONObject("user")
+    currentUser=user
+    when(open){
+     "messages"->showMessages()
+     "announcements"->showAnnouncements()
+     "home"->showHome(user)
+     else->showHome(user)
+    }
+   }else{
+    api.token=null
+    showLogin()
+   }
+  }
+ }
+ private fun syncPushToken(){
+  if(api.token==null)return
+  try{
+   com.google.firebase.messaging.FirebaseMessaging.getInstance().token.addOnCompleteListener{task->
+    if(!task.isSuccessful){
+     cache.edit().putBoolean("push_registered",false).apply()
+     return@addOnCompleteListener
+    }
+    val token=task.result?:return@addOnCompleteListener
+    network({
+     api.post(ApiRoutes.PUSH_SUBSCRIPTION,JSONObject()
+      .put("deviceKey",token)
+      .put("token",token)
+      .put("platform","android")
+      .put("provider","fcm")
+      .toString())
+    }){r->
+     cache.edit().putBoolean("push_registered",r.ok).apply()
+    }
+   }
+  }catch(_:Exception){
+   cache.edit().putBoolean("push_registered",false).apply()
+  }
+ }
+
  private fun raceBar(v:LinearLayout){
   val wrap=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL}
   val shell=LinearLayout(this).apply{
