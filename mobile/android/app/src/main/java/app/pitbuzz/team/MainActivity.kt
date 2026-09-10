@@ -212,7 +212,21 @@ class MainActivity:AppCompatActivity(){
   network({api.get(ApiRoutes.SYSTEM_ROLE)}){r->box.removeAllViews();if(!r.ok){box.addView(txt("Unable to load users."));return@network};val a=JSONObject(r.body).optJSONArray("users")?:return@network;for(i in 0 until a.length()){val u=a.getJSONObject(i);val row=LinearLayout(this).apply{orientation=LinearLayout.HORIZONTAL};row.addView(txt(u.optString("name")+" — "+u.optString("systemRole"),14f),LinearLayout.LayoutParams(0,dp(50),1f));row.addView(btn("Change",false){changeRole(u)},LinearLayout.LayoutParams(dp(100),dp(50)));box.addView(row)}}
   v.addView(btn("Back Home",false){resumeSession()});footer(v)
  }
- private fun changeRole(u:JSONObject){val roles=arrayOf("user","announcer","admin","super_admin");android.app.AlertDialog.Builder(this).setTitle("Role for ${u.optString("name")}").setItems(roles){_,which->val j=JSONObject().put("userId",u.getInt("id")).put("systemRole",roles[which]);network({api.post(ApiRoutes.SYSTEM_ROLE,j.toString())}){r->toast(if(r.ok)"Role updated" else jsonError(r.body,"Role change failed"));if(r.ok)showAdminRoles()}}.show()}
+ private fun changeRole(u:JSONObject) {
+  val roles = arrayOf("user","announcer","admin","super_admin")
+  android.app.AlertDialog.Builder(this)
+   .setTitle("Role for ${u.optString("name")}")
+   .setItems(roles) { _, which ->
+    val j = JSONObject()
+     .put("userId", u.getInt("id"))
+     .put("systemRole", roles[which])
+    network({ api.post(ApiRoutes.SYSTEM_ROLE, j.toString()) }) { r ->
+     toast(if (r.ok) "Role updated" else jsonError(r.body, "Role change failed"))
+     if (r.ok) showAdminRoles()
+    }
+   }
+   .show()
+ }
  private fun setBusy(b:Boolean){/* network guard hook; controls remain usable after callbacks */}
  override fun onDestroy(){super.onDestroy();io.shutdownNow()}
 }

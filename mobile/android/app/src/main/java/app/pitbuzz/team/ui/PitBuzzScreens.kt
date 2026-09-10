@@ -6,12 +6,6 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 
-/**
- * Legacy navigator compatibility shim.
- *
- * The live beta UI and API flow are owned by MainActivity.
- * This object remains only so older navigator references compile cleanly.
- */
 object PitBuzzScreens {
     fun render(a: Activity, n: PitBuzzNavigator, s: Screen): View =
         LinearLayout(a).apply {

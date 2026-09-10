@@ -6,7 +6,9 @@ import java.net.URL
 data class ApiResponse(val code:Int,val body:String){ val ok:Boolean get()=code in 200..299 }
 class ApiClient(ctx:Context, private val base:String="https://team.pitbuzz.app/") {
  private val sessions=SessionStore(ctx)
- var token:String? get()=sessions.load() set(v){ sessions.save(v) }
+ var token: String?
+  get() = sessions.load()
+  set(value) { sessions.save(value) }
  fun get(route:String)=request("GET",route,null)
  fun post(route:String,json:String)=request("POST",route,json)
  private fun request(method:String,route:String,json:String?):ApiResponse{
