@@ -1,38 +1,25 @@
 package app.pitbuzz.team.ui
+
 import android.app.Activity
-import android.graphics.Color
-import android.graphics.Typeface
-import android.text.InputType
 import android.view.Gravity
 import android.view.View
-import android.widget.*
-import app.pitbuzz.team.network.*
-import org.json.JSONObject
-import java.util.concurrent.Executors
+import android.widget.LinearLayout
+import android.widget.TextView
 
-object PitBuzzScreens{
- private val api=ApiClient(); private val io=Executors.newCachedThreadPool(); private val navy=Color.rgb(7,55,99); private val red=Color.rgb(230,28,45)
- private fun page(a:Activity)=LinearLayout(a).apply{orientation=LinearLayout.VERTICAL;setPadding(28,18,28,18);setBackgroundColor(Color.WHITE)}
- private fun txt(a:Activity,s:String,size:Float=17f)=TextView(a).apply{text=s;textSize=size;setTextColor(navy);setPadding(8,10,8,10)}
- private fun button(a:Activity,s:String)=Button(a).apply{text=s;minHeight=54}
- private fun field(a:Activity,h:String,password:Boolean=false)=EditText(a).apply{hint=h;minHeight=56;if(password)inputType=InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD}
- private fun header(a:Activity)=LinearLayout(a).apply{orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER
-   val id=a.resources.getIdentifier("natva_logo","drawable",a.packageName);if(id!=0)addView(ImageView(a).apply{setImageResource(id);adjustViewBounds=true;scaleType=ImageView.ScaleType.CENTER_INSIDE},LinearLayout.LayoutParams(-1,130))
-   addView(txt(a,"OFFICIAL RACE COMMUNICATION",16f).apply{gravity=Gravity.CENTER;setTypeface(typeface,Typeface.BOLD)})}
- private fun footer(a:Activity)=txt(a,"Powered by PitBuzz ©",13f).apply{gravity=Gravity.END;setTextColor(Color.DKGRAY)}
- private fun race(a:Activity)=txt(a,"RACE #   —      STAGING   —      GET READY   —",14f).apply{gravity=Gravity.CENTER;setTextColor(Color.WHITE);setBackgroundColor(navy)}
- private fun nav(a:Activity,n:PitBuzzNavigator)=LinearLayout(a).apply{orientation=LinearLayout.HORIZONTAL;listOf("Home" to Screen.HOME,"Announcements" to Screen.ANNOUNCEMENTS,"Messages" to Screen.MESSAGES,"Audio" to Screen.AUDIO,"Settings" to Screen.SETTINGS).forEach{(label,s)->addView(button(a,label).apply{textSize=10f;setOnClickListener{n.show(s)}},LinearLayout.LayoutParams(0,56,1f))}}
- private fun toast(a:Activity,s:String)=a.runOnUiThread{Toast.makeText(a,s,Toast.LENGTH_LONG).show()}
- private fun async(a:Activity,work:()->Unit){io.execute{try{work()}catch(e:Exception){toast(a,"Connection error: ${e.message?:"Please try again"}")}}}
- private fun error(body:String)=try{JSONObject(body).optString("error","Request failed")}catch(_:Exception){"Request failed"}
- fun render(a:Activity,n:PitBuzzNavigator,s:Screen):View=when(s){Screen.LOGIN->login(a,n);Screen.REGISTER->register(a,n);Screen.RECOVERY->recovery(a,n);Screen.HOME->home(a,n);Screen.ANNOUNCEMENTS->listPage(a,n,"Announcements",ApiRoutes.ANNOUNCEMENTS);Screen.MESSAGES->listPage(a,n,"Private Messages",ApiRoutes.MESSAGES);Screen.AUDIO->audio(a,n);Screen.SETTINGS->settings(a,n);Screen.TEAM->team(a,n);Screen.RACE_CONTROL->raceControl(a,n)}
- private fun login(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(txt(a,"Welcome to PitBuzz",28f).apply{setTypeface(typeface,Typeface.BOLD)});addView(txt(a,"Race-day communication for riders, families and crews."));val id=field(a,"Phone number or email");val pw=field(a,"Password",true);addView(id);addView(pw);addView(CheckBox(a).apply{text="Show password";setOnCheckedChangeListener{_,on->pw.inputType=InputType.TYPE_CLASS_TEXT or if(on)InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD else InputType.TYPE_TEXT_VARIATION_PASSWORD;pw.setSelection(pw.text.length)}});addView(button(a,"LOG IN").apply{setBackgroundColor(red);setTextColor(Color.WHITE);setOnClickListener{val b=JSONObject().put("login",id.text.toString().trim()).put("password",pw.text.toString());async(a){val r=api.post(ApiRoutes.LOGIN,b.toString());if(r.code in 200..299)a.runOnUiThread{n.show(Screen.HOME)} else toast(a,error(r.body))}}});addView(button(a,"FORGOT PASSWORD?").apply{setOnClickListener{n.show(Screen.RECOVERY)}});addView(button(a,"CREATE ACCOUNT").apply{setOnClickListener{n.show(Screen.REGISTER)}});addView(footer(a))}
- private fun register(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(txt(a,"Create Account",27f));val name=field(a,"Name");val phone=field(a,"Phone Number");val phone2=field(a,"Confirm Phone Number");val email=field(a,"Email");val pw=field(a,"Password",true);val pw2=field(a,"Confirm Password",true);listOf(name,phone,phone2,email,pw,pw2).forEach{addView(it)};addView(button(a,"CREATE ACCOUNT").apply{setOnClickListener{val vr=RegistrationValidator.validate(name.text.toString(),phone.text.toString(),phone2.text.toString(),email.text.toString(),pw.text.toString(),pw2.text.toString());if(!vr.ok){toast(a,vr.message);return@setOnClickListener};val b=JSONObject().put("name",name.text.toString().trim()).put("phone",RegistrationValidator.normalizePhone(phone.text.toString())).put("email",email.text.toString().trim()).put("password",pw.text.toString());async(a){val r=api.post(ApiRoutes.REGISTER,b.toString());if(r.code in 200..299)a.runOnUiThread{n.show(Screen.HOME)}else toast(a,error(r.body))}}});addView(button(a,"BACK TO SIGN IN").apply{setOnClickListener{n.show(Screen.LOGIN)}});addView(footer(a))}
- private fun recovery(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(txt(a,"Account Recovery",27f));addView(txt(a,"Password recovery is not enabled on the server yet. Contact the series administrator for beta access."));addView(button(a,"BACK TO SIGN IN").apply{setOnClickListener{n.show(Screen.LOGIN)}});addView(footer(a))}
- private fun home(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(race(a));val status=txt(a,"CONNECTING…");addView(status);val ann=txt(a,"LATEST ANNOUNCEMENT\nLoading…");addView(ann);addView(button(a,"MY TEAM").apply{setOnClickListener{n.show(Screen.TEAM)}});addView(nav(a,n));addView(footer(a));async(a){val rs=api.get(ApiRoutes.RACE_STATUS);val ar=api.get(ApiRoutes.ANNOUNCEMENTS);a.runOnUiThread{status.text=if(rs.code in 200..299)"✓ CONNECTED" else "OFFLINE — showing last known data";ann.text="LATEST ANNOUNCEMENT\n"+(if(ar.code in 200..299) ar.body.take(350) else "Unable to load announcements")}}}
- private fun listPage(a:Activity,n:PitBuzzNavigator,title:String,route:String)=page(a).apply{addView(header(a));addView(race(a));addView(txt(a,title,25f));val body=txt(a,"Loading…");addView(body);addView(nav(a,n));addView(footer(a));async(a){val r=api.get(route);a.runOnUiThread{body.text=if(r.code in 200..299)r.body else error(r.body)}}}
- private fun audio(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(race(a));addView(CheckBox(a).apply{text="Announcement audio";isChecked=true});addView(CheckBox(a).apply{text="Race alert audio";isChecked=true});addView(txt(a,"Private messages never auto-play."));addView(nav(a,n));addView(footer(a))}
- private fun settings(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(race(a));addView(txt(a,"Settings",25f));addView(button(a,"SIGN OUT").apply{setOnClickListener{async(a){api.post(ApiRoutes.LOGOUT,"{}");a.runOnUiThread{n.show(Screen.LOGIN)}}}});addView(nav(a,n));addView(footer(a))}
- private fun team(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(txt(a,"My Team",25f));val body=txt(a,"Loading…");addView(body);addView(button(a,"BACK").apply{setOnClickListener{n.show(Screen.HOME)}});addView(footer(a));async(a){val r=api.get(ApiRoutes.TEAM);a.runOnUiThread{body.text=if(r.code in 200..299)r.body else error(r.body)}}}
- private fun raceControl(a:Activity,n:PitBuzzNavigator)=page(a).apply{addView(header(a));addView(race(a));addView(txt(a,"Authorized officials only"));addView(button(a,"ADVANCE"));addView(button(a,"SET / CORRECT"));addView(footer(a))}
+/**
+ * Legacy navigator compatibility shim.
+ *
+ * The live beta UI and API flow are owned by MainActivity.
+ * This object remains only so older navigator references compile cleanly.
+ */
+object PitBuzzScreens {
+    fun render(a: Activity, n: PitBuzzNavigator, s: Screen): View =
+        LinearLayout(a).apply {
+            orientation = LinearLayout.VERTICAL
+            gravity = Gravity.CENTER
+            addView(TextView(a).apply {
+                text = "PitBuzz"
+                gravity = Gravity.CENTER
+            })
+        }
 }
