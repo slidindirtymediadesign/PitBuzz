@@ -28,5 +28,6 @@ android {
 dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.activity:activity-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.15.0")
     implementation("com.google.firebase:firebase-messaging:24.1.0")
 }
